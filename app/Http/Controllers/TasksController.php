@@ -72,7 +72,7 @@ class TasksController extends Controller
         $task = new Task;
         $task->status = $request->status; // 追加
         $task->content = $request->content;
-        $task->user_id = $request->user_id;
+        
         $task->user_id = \Auth::id();
         $task->save();
 
@@ -95,14 +95,18 @@ class TasksController extends Controller
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
         
-        
-        
+        // ログイン中の人のタスクであれば表示して良い。そうでなければトップページへリダイレクト
+         if (\Auth::id() === $task->user_id) {
+             
+        }
 
         // メッセージ詳細ビューでそれを表示
         return view('tasks.show', [
             
             'task' => $task,
         ]);
+        // トップページへリダイレクトさせる
+        return redirect('/');
     }
 
     /**
@@ -115,11 +119,19 @@ class TasksController extends Controller
     {
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
+        
+         if (\Auth::id() === $task->user_id) {
+             
+        }
 
         // メッセージ編集ビューでそれを表示
         return view('tasks.edit', [
             'task' => $task,
         ]);
+        
+        // トップページへリダイレクトさせる
+        return redirect('/');
+        
     }
 
     /**
